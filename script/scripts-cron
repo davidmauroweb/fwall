@@ -1,0 +1,35 @@
+#!/bin/bash
+clientes=$(docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "select name from fwall.users"')
+
+for u in $clientes
+do
+if [[ "$u" == 'name' ]]
+  then
+    continue
+  fi
+if [[ "$u" == 'admin' ]]
+  then
+    continue
+  fi
+rm *.json
+curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked"' > b.json
+curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_safebrowsing"' > bs.json
+curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_parental"' > bp.json
+	for j in b bs bp
+	do
+		loops=$(jq '.data|length' $j.json)
+		lp=$loops-1
+		for ((i=$lp; i>=0; i--))
+		do
+			ip=$(jq '.data['$i'].client ' < $j.json)
+			time=$(jq '.data['$i'].time ' < $j.json)
+			filterid=$(jq '.data['$i'].filterId ' < $j.json)
+			sitio=$(jq '.data['$i'].question.name ' < $j.json)
+			echo 'INSERT INTO fwall.fwalls(time,userId,ipClient,site,block) VALUES (DATE_SUB('$time',INTERVAL 3 HOUR),"'$u'",'$ip','$sitio',"'$j'");' > query.sql
+			cat query.sql
+			docker exec -i fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw' < query.sql
+			docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "DELETE from fwall.fwalls where time < SUBDATE(CURDATE(),30)"'
+		done
+	done
+done
+

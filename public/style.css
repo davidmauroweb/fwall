@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.contenido {
+    display: none; /* Ocultar todos los contenidos por defecto */
+    transition: opacity 0.8s; /* Transición de opacidad */
+}
+
+.mostrar {
+    display: block !important; /* Forzar mostrar */
+    opacity: 1; /* Hacer visible */
+}
+

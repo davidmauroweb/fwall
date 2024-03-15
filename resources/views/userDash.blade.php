@@ -430,7 +430,7 @@ $(document).ready(function(){
                 <tr class="border-b hover:bg-blue">
                   <td class="w-1/2 p-4">{{$l->site}}</td>
                   <td class="w-1/2 p-4">
-                    <div><span class="pcassi-cant font-inter">{{$l->total}}</span> <span class="pcassi-porcent font-inte">{{number_format(($l->total * 100)/$b, 2)}}%</span></div>
+                    <div><span class="pcassi-cant font-inter"><b>{{$l->total}}</b></span> <span class="pcassi-porcent font-inte">({{number_format(($l->total * 100)/$b, 2)}}%)</span></div>
                     <div class="progress-container w-full lg:w-72 bg-grisclaro rounded-full h-1.5 dark:bg-gray-700">
                       <div class="progress-content bg-azulassi h-1.5 rounded-full" style="width: {{($l->total * 100)/$b}}%"></div>
                     </div>
@@ -444,7 +444,7 @@ $(document).ready(function(){
                 <tr class="border-b hover:bg-blue">
                   <td class="w-1/2 p-4">{{$l->site}}</td>
                   <td class="w-1/2 p-4">
-                    <div><span class="pcassi-cant font-inter">{{$l->total}}</span> <span class="pcassi-porcent font-inte">{{number_format(($l->total * 100)/$bs, 2)}}%</span></div>
+                    <div><span class="pcassi-cant font-inter"><b>{{$l->total}}</b></span> <span class="pcassi-porcent font-inte">({{number_format(($l->total * 100)/$bs, 2)}}%)</span></div>
                     <div class="progress-container w-full lg:w-72 bg-grisclaro rounded-full h-1.5 dark:bg-gray-700">
                       <div class="progress-content bg-azulassi h-1.5 rounded-full" style="width: {{($l->total * 100)/$bs}}%"></div>
                     </div>
@@ -458,7 +458,7 @@ $(document).ready(function(){
                 <tr class="border-b hover:bg-blue">
                   <td class="w-1/2 p-4">{{$l->site}}</td>
                   <td class="w-1/2 p-4">
-                    <div><span class="pcassi-cant font-inter">{{$l->total}}</span> <span class="pcassi-porcent font-inte">{{number_format(($l->total * 100)/$bp, 2)}}%</span></div>
+                    <div><span class="pcassi-cant font-inter"><b>{{$l->total}}</b></span> <span class="pcassi-porcent font-inte">({{number_format(($l->total * 100)/$bp, 2)}}%)</span></div>
                     <div class="progress-container w-full lg:w-72 bg-grisclaro rounded-full h-1.5 dark:bg-gray-700">
                       <div class="progress-content bg-azulassi h-1.5 rounded-full" style="width: {{($l->total * 100)/$bp}}%"></div>
                     </div>

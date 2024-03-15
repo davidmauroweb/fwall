@@ -24,6 +24,11 @@
  
 <script type="text/javascript">
 $(document).ready(function(){
+    $("#tbodybp").ready(function(){
+        $(".b").show();
+        $(".bs").hide();
+        $(".bp").hide();
+      });
       $("#b").click(function(){
         $(".b").show();
         $(".bs").hide();
@@ -448,7 +453,7 @@ $(document).ready(function(){
                 @endforeach
               </tbody>
 
-              <tbody class="text-negro90 text-xs bp">
+              <tbody class="text-negro90 text-xs bp" id="tbodybp">
                 @foreach($gbp as $l)
                 <tr class="border-b hover:bg-blue">
                   <td class="w-1/2 p-4">{{$l->site}}</td>

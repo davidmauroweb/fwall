@@ -284,16 +284,16 @@ $(document).ready(function(){
                                 fill: false,
                                 backgroundColor: [
                                 "#277bc1",
-                                "#86bcea",
                                 "#a44242",
+                                "#86bcea",
                                 "#d87d7d",
                                 "#deb3b3",
                                 "#bababa"
                                 ],
                                 borderColor: [
                                 "#277bc1",
-                                "#86bcea",
                                 "#a44242",
+                                "#86bcea",
                                 "#d87d7d",
                                 "#deb3b3",
                                 "#bababa"

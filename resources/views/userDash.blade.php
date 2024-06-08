@@ -80,7 +80,7 @@ $(document).ready(function(){
             onclick="mostrarContenido('regIP')">
             <a href="#" class="block lg:py-1 py-3" title="Regsitros por IP">
                 <i class="fa-solid fa-location-crosshairs lg:text-sm text-xl"></i>
-                <span class="hidden lg:inline text-sm">Bloqueos Registrador</span>
+                <span class="hidden lg:inline text-sm">Bloqueos Registrados</span>
             </a>
             <i class="fa-solid fa-angle-right text-grisoscuro ml-auto"></i>
         </li>
@@ -355,7 +355,7 @@ $(document).ready(function(){
               <tbody class="text-negro90 text-xs">
                 @foreach ($lb as $l)
                             <tr class="border-b hover:bg-blue">
-                            <td class="w-2/12 p-4 hover:bg-azulassi">{{date('d/m/y H:i', strtotime($l->time))}}</td>
+                            <td class="w-2/12 p-4 hover:bg-azulassi">{{ date('d/m/Y H:i:s', strtotime($l->time)) }}</td>
                             <td class="w-2/12 p-4">{{$l->ipClient}}</td>
                             <td class="w-8/12 p-4 font-semibold">{{$l->site}}</td>
                             </tr>

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Ingreso') }}</div>
+                <div class="card-header">{{ __('Ingreso') }} - {{ config('app.name', 'ZeroTrustDns') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -63,6 +63,9 @@
                     </form>
                 </div>
             </div>
+            <div class="d-flex justify-content-center my-4">
+                <img src="../imgs/OrigZeroTrustDNS.png" alt="logo ZeroTrust DNS" width="248px" height="102px" >
+           </div>
         </div>
     </div>
 </div>

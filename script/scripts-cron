@@ -1,35 +1,31 @@
 #!/bin/bash
-clientes=$(docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "select name from fwall.users"')
+#./get-bg.sh
+clientes=$(docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "select name from fwall.users"'|grep -v admin|grep -v name)
 
 for u in $clientes
 do
-if [[ "$u" == 'name' ]]
-  then
-    continue
-  fi
-if [[ "$u" == 'admin' ]]
-  then
-    continue
-  fi
-rm *.json
-curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked"' > b.json
-curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_safebrowsing"' > bs.json
-curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_parental"' > bp.json
+#curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked"' > $u.b.json 
+#curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_safebrowsing"' > $u.bs.json 
+#curl -n 'https://adguard-sn.pcassi.net/control/querylog?search='$u'&response_status="blocked_parental"' > $u.bp.json 
 	for j in b bs bp
 	do
-		loops=$(jq '.data|length' $j.json)
+		loops=$(jq '.data|length' $u.$j.json)
 		lp=$loops-1
 		for ((i=$lp; i>=0; i--))
 		do
-			ip=$(jq '.data['$i'].client ' < $j.json)
-			time=$(jq '.data['$i'].time ' < $j.json)
-			filterid=$(jq '.data['$i'].filterId ' < $j.json)
-			sitio=$(jq '.data['$i'].question.name ' < $j.json)
-			echo 'INSERT INTO fwall.fwalls(time,userId,ipClient,site,block) VALUES (DATE_SUB('$time',INTERVAL 3 HOUR),"'$u'",'$ip','$sitio',"'$j'");' > query.sql
-			cat query.sql
-			docker exec -i fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw' < query.sql
-			docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "DELETE from fwall.fwalls where time < SUBDATE(CURDATE(),30)"'
+			ip=$(jq '.data['$i'].client ' < $u.$j.json)
+			t=$(jq '.data['$i'].time ' < $u.$j.json)
+			filterid=$(jq '.data['$i'].filterId ' < $u.$j.json)
+			sitio=$(jq '.data['$i'].question.name ' < $u.$j.json)
+			tm=${t:0:20}\"
+			usuario=$(jq '.data['$i'].client_info.name ' < $u.$j.json)
+			#echo 'INSERT INTO fwall.fwalls(time,userId,ipClient,site,block) VALUES (DATE_SUB('$tm',INTERVAL 3 HOUR),"'$u'",'$ip','$sitio',"'$j'");' > query.sql
+			quer='INSERT INTO fwall.fwalls(time,userId,ipClient,site,block) VALUES ('$tm','$usuario','$ip','$sitio',"'$j'");'
+			#cat query.sql
+			echo $quer
 		done
 	done
+	
 done
-
+#docker exec -i fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw' < query.sql
+./get-bg.sh

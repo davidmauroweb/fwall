@@ -1,5 +1,5 @@
 #!/bin/bash
-clientes=$(docker exec fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw -e "select name from fwall.users"')
+clientes=$(docker exec my-fwall sh -c 'exec mysql -uusfwall -pfwallpsw -e "select name from fwall.users"')
 
 for u in $clientes
 do
@@ -13,9 +13,9 @@ do
     fi
 	for j in b bs bp
 	do
-        echo "SELECT COUNT(block) AS '' FROM fwall.fwalls WHERE userId LIKE '"$u"' AND block LIKE '"$j"' AND time > DATE_SUB(NOW(),INTERVAL 24 HOUR)cd GROUP BY block;">totales.sql
+        echo "SELECT COUNT(block) AS '' FROM fwall.fwalls WHERE userId LIKE '"$u"' AND block LIKE '"$j"' AND time > DATE_SUB(NOW(),INTERVAL 24 HOUR) GROUP BY block;">totales.sql
         echo $u - $j
-        total=$(docker exec -i fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw' < totales.sql)
+        total=$(docker exec -i my-fwall sh -c 'exec mysql -uusfwall -pfwallpsw' < totales.sql)
         if [ "$total" != '' ]
             then
             echo $total > $j.val
@@ -24,6 +24,7 @@ do
         fi
     done
     echo 'INSERT INTO fwall.diarios(dia,userId,b,bs,bp) VALUES (SUBDATE(CURDATE(),1),"'$u'",'$(cat b.val)','$(cat bs.val)','$(cat bp.val)');' > tub.sql
-    docker exec -i fwall-mysql-1 sh -c 'exec mysql -uusfwall -pfwallpsw' < tub.sql
+    docker exec -i my-fwall sh -c 'exec mysql -uusfwall -pfwallpsw' < tub.sql
+    docker exec -i my-fwall sh -c 'exec mysql -uusfwall -pfwallpsw' < fwall-clear.sql
 done
 

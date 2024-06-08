@@ -17,7 +17,7 @@ use App\Http\Controllers\{FwallController};
 Route::get('/', function () {
     return redirect()->route('home');
 });
-Auth::routes();
+//Auth::routes();
 Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/graph/{us}', [App\Http\Controllers\HomeController::class, 'show'])->name('home.show');
@@ -28,6 +28,7 @@ Route::group(['middleware' => 'admin'], function () {
         return view('nuevo-us');
     })->name('formulario');
     Route::post('/lista', [App\Http\Controllers\FwallController::class, 'store'])->name('lista.store');
+    Route::post('/lista-upd', [App\Http\Controllers\FwallController::class, 'clave'])->name('lista.clave');
     Route::post('/lista-del', [App\Http\Controllers\FwallController::class, 'del'])->name('lista.del');
     Route::post('/graph', [App\Http\Controllers\HomeController::class, 'show2'])->name('home.show2');
 });

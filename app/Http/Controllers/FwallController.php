@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\{fwall,User};
+use Illuminate\Support\Facades\DB;
+use App\Models\{fwall,User,diario};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +18,8 @@ class FwallController extends Controller
     public function index()
     {
         $lista = User::all()->where('adm', 0)->sortBy('name');
-        return view ('usuarios', ['usuarios'=>$lista]);
+        $top = DB::table('fwalls')->select('userId', DB::raw('count(*) as total'))->where('time', '>', DB::raw('DATE_SUB(NOW(),INTERVAL 2 week)'))->groupBy('userId')->orderBy('total', 'desc')->take(6)->get();
+        return view ('usuarios', ['usuarios'=>$lista, 'top'=>$top]);
     }
 
     /**
@@ -61,6 +62,25 @@ class FwallController extends Controller
 
     } 
 
+
+    public function clave(Request $request)
+    {
+            if ($request->password==$request->password_confirmation){
+                $Actual = User::find($request->usr);
+                $Actual->password = Hash::make($request->password);
+                $Actual->save();
+                $err = 'mensajeOk';
+                $msj = 'La clave de '.$request->name.' se cambió correctamente';
+            }else{
+                $err = 'mensajeNo';
+                $msj = ' Las Claves no coinciden';
+            }
+        return redirect()->route('lista.index')->with($err,$msj);
+
+    } 
+
+
+
     /**
      * Display the specified resource.
      */
@@ -93,6 +113,7 @@ class FwallController extends Controller
         }
         if (isset($request->registro)){
             fwall::where('userId', $request->us)->delete();
+            diario::where('userId', $request->us)->delete();
             $msj= "Del id ". $request->us." se eliminó solo historial de bloqueos.";
         }
         return redirect()->route('lista.index')->with('mensajeOk',$msj);
